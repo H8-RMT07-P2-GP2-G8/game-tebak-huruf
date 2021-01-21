@@ -1,29 +1,9 @@
-const { emit } = require('process');
-
 const app = require('express')();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 const PORT = 3000
 
-const players = []
-const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
-
-function generateQuestion () {
-  let index = Math.round(Math.random()*25);
-  let question = alphabet[index];
-  let margin = Math.round(Math.random()*25);
-  let answer;
-  if((index+margin) > 25){
-    answer = alphabet[index+margin-26];
-  } else {
-    answer = alphabet[index+margin];
-  }
-  return {
-    question,
-    margin,
-    answer
-  }
-}
+let players = []
 
 function sleep(milliseconds) {
   const date = Date.now();
@@ -53,7 +33,10 @@ io.on('connection', (socket) => {
   socket.on('tambah', name => { // untuk nambah score
     players.map(e => {
       if(e.name === name) e.score++
-      if(e.score === 10) io.emit('end', {winner: e.name}) // kirim pemenang kalau score sudah 10
+      if(e.score === 10){
+        io.emit('end', {winner: e.name}) // kirim pemenang kalau score sudah 10
+        players = [];
+      } 
     })
     io.emit('getPlayers', players) //ngirim const players ke server
   })
