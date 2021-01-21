@@ -32,7 +32,8 @@ io.on('connection', (socket) => {
   })
 
   socket.on('triggerStart', payload => {
-    // io.emit('getReady')
+    sleep(1) // kasi delay sebelum mulai game
+    io.emit('getReady')
     sleep(5000) // kasi delay sebelum mulai game
     io.emit('start')
   })

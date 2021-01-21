@@ -5,11 +5,15 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    players: []
+    players: [],
+    hasStarted: false
   },
   mutations: {
     SOCKET_getPlayers (state, payload) {
       state.players = payload
+    },
+    updateStarted (state, payload) {
+      state.hasStarted = payload
     }
   },
   actions: {
