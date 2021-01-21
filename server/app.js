@@ -1,16 +1,23 @@
 const app = require('express')();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
-});
+const PORT = 3000
 
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.emit('connect')
+
+  socket.on('join', (payload) => {
+    players.push(payload)
+    io.emit('getPlayers', players)
+  })
+
+  socket.on('tambah', i => {
+    players[i].score++
+    io.emit('getPlayers', players)
+  })
 });
 
-http.listen(3000, () => {
-  console.log('listening on *:3000');
+http.listen(PORT, () => {
+  console.log(`listening on port: ${PORT}`);
 });
