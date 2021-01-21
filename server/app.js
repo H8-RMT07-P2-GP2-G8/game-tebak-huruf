@@ -1,6 +1,6 @@
 const app = require('express')();
 const server = require('http').Server(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(server);
 const PORT = 3000
 
 const players = []
@@ -38,6 +38,6 @@ io.on('connection', (socket) => {
   })
 });
 
-http.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);
 });
