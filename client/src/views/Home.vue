@@ -26,13 +26,7 @@ export default {
     join () {
       this.$socket.emit('join', { name: this.name, score: 0 })
       this.$router.push('/play/' + this.name)
-    },
-    tambah (i) {
-      this.$socket.emit('tambah', i)
     }
-  },
-  sockets: {
-
   },
   created () {
 

@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 export default {
   props: ['player', 'index'],
   data () {
@@ -18,7 +19,18 @@ export default {
     }
   },
   created () {
-
+    console.log(this.player.score)
+    if (this.player.score === 10) console.log('done')
+  },
+  sockets: {
+    end (payload) {
+      Swal.fire({
+        title: 'game over!',
+        icon: 'success',
+        text: 'winner ' + payload.winner
+      })
+      this.$router.push('/')
+    }
   }
 }
 </script>
