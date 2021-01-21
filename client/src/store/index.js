@@ -13,6 +13,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    getPlayer (context) {
+
+    }
   },
   modules: {
   }
