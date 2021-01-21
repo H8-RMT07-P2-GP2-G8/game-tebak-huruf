@@ -8,7 +8,7 @@
         v-model="name"
         placeholder="name"
       >
-      <button type="submit" value="join">join</button>
+      <button type="submit" value="join">join</button> <!-- user klik join -->
     </form>
   </div>
 </template>
@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     join () {
-      this.$socket.emit('join', { name: this.name, score: 0 })
+      this.$socket.emit('join', { name: this.name, score: 0 }) //
       this.$router.push('/play/' + this.name)
     }
   },
