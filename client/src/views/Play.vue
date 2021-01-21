@@ -3,8 +3,11 @@
     <div>
         <b-modal ref="my-modal" hide-footer title="How to Play">
             <div class="d-block">
-                <p>1. blablablabla</p>
-                <p>2. blablablabla</p>
+                <p class="my-4">1. Game baru bisa dimulai ketika jumlah player 2 atau lebih</p>
+                <p class="my-4">2. Akan muncul sebuah huruf & angka, contoh:</p>
+                <p class="pl-3">A + 5 maka jawaban yang benar adalah <b>G</b> karena 5 huruf setelah A adalah G</p>
+                <p class="my-4">3. Tekan tombol keyboard untuk menjawab</p>
+                <p class="my-4 pb-3">4. Pemain yang mencapai score 10 tercepat adalah pemenangnya</p>
             </div>
             <b-button class="mt-3" variant="outline-primary" block @click="hideModal">Close</b-button>
         </b-modal>
