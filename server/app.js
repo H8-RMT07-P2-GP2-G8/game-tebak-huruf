@@ -3,6 +3,8 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const PORT = 3000
 
+const players = []
+
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.emit('connect')
