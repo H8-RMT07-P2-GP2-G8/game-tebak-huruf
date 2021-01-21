@@ -17,19 +17,22 @@
                     <h1>
                         {{question}} + {{angka}}
                     </h1>
-                    <b-button variant="primary">Ready</b-button>
+                    <b-button variant="primary" disabled v-if="players.length<2">Please wait</b-button>
+                    <b-button variant="primary" v-if="players.length>=2" @click.prevent="triggerStart">Start</b-button>
                 </b-card>
             </b-col>
         </b-row>
     </b-container>
-    <b-row>
-      <player-card
-        v-for="(player, i) in players"
-        :key="i"
-        :index="i"
-        :player="player"
-      />
-    </b-row>
+    <b-container class="mt-5">
+      <b-row>
+        <player-card
+          v-for="(player, i) in players"
+          :key="i"
+          :index="i"
+          :player="player"
+        />
+      </b-row>
+    </b-container>
   </div>
 </template>
 
@@ -64,16 +67,21 @@ export default {
     },
     hideModal () {
       this.$refs['my-modal'].hide()
+    },
+    triggerStart () {
+      this.$socket.emit('triggerStart')
     }
   },
   sockets: {
+    getReady () {
+      console.log('Get ready')
+    },
     start () {
       const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
       this.question = alphabet[Math.random() * 26 | 0]
       this.angka = Math.random() * 10 | 0
       window.addEventListener('keydown', (e) => {
         const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
-        // if (e.key === alphabet[newIndex]) {
         if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
           this.$socket.emit('tambah', this.$route.params.id)
           this.question = alphabet[Math.random() * 26 | 0]

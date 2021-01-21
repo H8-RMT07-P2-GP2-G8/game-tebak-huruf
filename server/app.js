@@ -24,10 +24,17 @@ io.on('connection', (socket) => {
   socket.on('join', (payload) => {
     players.push(payload)
     io.emit('getPlayers', players)
-    if(players.length == 2) { // mulai game kalau player sudah 2 orang
-      sleep(5000) // kasi delay sebelum mulai game
-      io.emit('start')
-    }
+    // if(players.length == 2) { // mulai game kalau player sudah 2 orang
+      // io.emit('getReady')
+    //   sleep(5000) // kasi delay sebelum mulai game
+    //   io.emit('start')
+    // }
+  })
+
+  socket.on('triggerStart', payload => {
+    // io.emit('getReady')
+    sleep(5000) // kasi delay sebelum mulai game
+    io.emit('start')
   })
 
   socket.on('tambah', name => { // untuk nambah score
@@ -35,7 +42,7 @@ io.on('connection', (socket) => {
       if(e.name === name) e.score++
       if(e.score === 10){
         io.emit('end', {winner: e.name}) // kirim pemenang kalau score sudah 10
-        players = [];
+        players = [] // reset players kalau game selesai
       } 
     })
     io.emit('getPlayers', players) //ngirim const players ke server
