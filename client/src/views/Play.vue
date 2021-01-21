@@ -1,6 +1,6 @@
 <template>
   <div>
-    <input type="text" v-model="question">
+    <input type="text" v-model="question" class="col-3"> + <input type="text" v-model="angka" class="col-3">
     <player-card
       v-for="(player, i) in players"
       :key="i"
@@ -23,7 +23,8 @@ export default {
   },
   data () {
     return {
-      question: ''
+      question: '',
+      angka: ''
     }
   },
   methods: {
@@ -36,13 +37,16 @@ export default {
   },
   created () {
     const alphabet = 'abcdefghijklmnopqrstuvwxyz'
+    this.question = alphabet[Math.random() * 26 | 0]
+    this.angka = Math.random() * 10 | 0
     window.addEventListener('keydown', (e) => {
-      if (e.key === this.question.toString()) {
+      const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
+      if (e.key === alphabet[newIndex]) {
         this.$socket.emit('tambah', this.$route.params.id)
         this.question = alphabet[Math.random() * 26 | 0]
+        this.angka = Math.random() * 10 | 0
       }
     })
-    this.question = alphabet[Math.random() * 26 | 0]
     this.$socket.emit('getPlayers')
   }
 }
