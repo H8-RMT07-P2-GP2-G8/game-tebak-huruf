@@ -1,7 +1,9 @@
 const app = require('express')();
 const server = require('http').Server(app);
 const io = require('socket.io')(http);
+const PORT = 3000
 
+const players = []
 const alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
 
 function generateQuestion () {
@@ -24,8 +26,18 @@ function generateQuestion () {
 io.on('connection', (socket) => {
   console.log('a user connected');
   socket.emit('connect')
+
+  socket.on('join', (payload) => {
+    players.push(payload)
+    io.emit('getPlayers', players)
+  })
+
+  socket.on('tambah', i => {
+    players[i].score++
+    io.emit('getPlayers', players)
+  })
 });
 
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+http.listen(PORT, () => {
+  console.log(`listening on port: ${PORT}`);
 });

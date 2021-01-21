@@ -1,18 +1,58 @@
 <template>
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <form @submit.prevent="join">
+      <input
+        type="text"
+        id="username"
+        v-model="name"
+        placeholder="name"
+      >
+      <button type="submit" value="join">join</button>
+    </form>
+    <p
+      v-for="(player, i) in players"
+      :key="i"
+    >{{ player.name }} {{ player.score }} </p>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld
+  data () {
+    return {
+      name: ''
+    }
+  },
+  methods: {
+    join () {
+      console.log('gg')
+      this.$socket.emit('join', { name: this.name, score: 0 })
+    },
+    tambah (i) {
+      this.$socket.emit('tambah', i)
+    }
+  },
+  computed: {
+    ...mapState([
+      'players'
+    ])
+  },
+  sockets: {
+
+  },
+  created () {
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'a') {
+        this.$socket.emit('tambah', 0)
+      } else if (e.key === 's') {
+        this.$socket.emit('tambah', 1)
+      }
+    })
   }
 }
 </script>
