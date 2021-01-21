@@ -13,12 +13,13 @@
         <b-row>
             <b-col md="12">
                 <b-card title="Huruf apakah ini?" class="text-center border-light shadow">
-                  <!-- <input type="text" v-model="question" class="col-3"> + <input type="text" v-model="angka" class="col-3"> -->
                     <h1>
                         {{question}} + {{angka}}
                     </h1>
-                    <b-button variant="primary" disabled v-if="players.length<2">Please wait</b-button>
-                    <b-button variant="primary" v-if="players.length>=2" @click.prevent="triggerStart">Start</b-button>
+                    <div v-if="!hasStarted">
+                      <b-button variant="primary" disabled v-if="players.length<2">Please wait</b-button>
+                      <b-button variant="primary" v-if="players.length>=2" @click.prevent="triggerStart">Start</b-button>
+                    </div>
                 </b-card>
             </b-col>
         </b-row>
@@ -46,7 +47,7 @@ export default {
   name: 'Play',
   computed: {
     ...mapState([
-      'players'
+      'players', 'hasStarted'
     ])
   },
   data () {
@@ -75,8 +76,36 @@ export default {
   sockets: {
     getReady () {
       console.log('Get ready')
+      let timerInterval
+      Swal.fire({
+        title: 'Get ready!',
+        html: 'Starting in <b></b> milliseconds.',
+        timer: 5000,
+        timerProgressBar: true,
+        didOpen: () => {
+          Swal.showLoading()
+          timerInterval = setInterval(() => {
+            const content = Swal.getContent()
+            if (content) {
+              const b = content.querySelector('b')
+              if (b) {
+                b.textContent = Swal.getTimerLeft()
+              }
+            }
+          }, 100)
+        },
+        willClose: () => {
+          clearInterval(timerInterval)
+        }
+      }).then((result) => {
+        /* Read more about handling dismissals below */
+        if (result.dismiss === Swal.DismissReason.timer) {
+          console.log('I was closed by the timer')
+        }
+      })
     },
     start () {
+      this.$store.commit('updateStarted', true)
       const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
       this.question = alphabet[Math.random() * 26 | 0]
       this.angka = Math.random() * 10 | 0
@@ -96,6 +125,7 @@ export default {
         icon: 'success',
         text: 'The winner is ' + payload.winner
       })
+      this.$store.commit('updateStarted', false)
       this.$router.push('/')
     }
   },

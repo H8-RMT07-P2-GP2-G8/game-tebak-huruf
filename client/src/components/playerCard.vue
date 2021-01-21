@@ -1,5 +1,4 @@
 <template>
-  <!-- <div class="row d-flex justify-content-center"> -->
     <b-col md="6">
       <b-card no-body class="overflow-hidden h-50 border-light shadow" style="max-width: 540px;">
         <b-row no-gutters>
@@ -17,16 +16,6 @@
         </b-row>
       </b-card>
     </b-col>
-  <!-- </div> -->
-
-  <!-- <div class="row d-flex justify-content-center">
-    <div class="col-3">
-      <div class="card mb-2">
-        <div>{{ player.name }}</div>
-        <div>{{ player.score }}</div>
-      </div>
-    </div>
-  </div> -->
 </template>
 
 <script>
