@@ -10,17 +10,11 @@
       >
       <button type="submit" value="join">join</button>
     </form>
-    <p
-      v-for="(player, i) in players"
-      :key="i"
-    >{{ player.name }} {{ player.score }} </p>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import { mapState } from 'vuex'
-
 export default {
   name: 'Home',
   data () {
@@ -30,29 +24,18 @@ export default {
   },
   methods: {
     join () {
-      console.log('gg')
       this.$socket.emit('join', { name: this.name, score: 0 })
+      this.$router.push('/play/' + this.name)
     },
     tambah (i) {
       this.$socket.emit('tambah', i)
     }
   },
-  computed: {
-    ...mapState([
-      'players'
-    ])
-  },
   sockets: {
 
   },
   created () {
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'a') {
-        this.$socket.emit('tambah', 0)
-      } else if (e.key === 's') {
-        this.$socket.emit('tambah', 1)
-      }
-    })
+
   }
 }
 </script>

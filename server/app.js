@@ -1,6 +1,6 @@
 const app = require('express')();
 const server = require('http').Server(app);
-const io = require('socket.io')(http);
+const io = require('socket.io')(server);
 const PORT = 3000
 
 const players = []
@@ -27,17 +27,23 @@ io.on('connection', (socket) => {
   console.log('a user connected');
   socket.emit('connect')
 
+  socket.on('getPlayers', payload => {
+    io.emit('getPlayers', players)
+  })
+
   socket.on('join', (payload) => {
     players.push(payload)
     io.emit('getPlayers', players)
   })
 
-  socket.on('tambah', i => {
-    players[i].score++
+  socket.on('tambah', name => {
+    players.map(e => {
+      if(e.name === name) e.score++
+    })
     io.emit('getPlayers', players)
   })
 });
 
-http.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`listening on port: ${PORT}`);
 });
