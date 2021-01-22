@@ -47,6 +47,7 @@ import { mapState } from 'vuex'
 import playerCard from '../components/playerCard.vue'
 import Swal from 'sweetalert2'
 const audio = new Audio('https://ia601403.us.archive.org/5/items/the-mole/The%20Mole.mp3')
+const correct = new Audio('https://www.soundjay.com/button/sounds/button-3.mp3')
 
 export default {
   components: { playerCard },
@@ -125,6 +126,7 @@ export default {
       window.addEventListener('keydown', (e) => {
         const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
         if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
+          correct.play()
           this.$socket.emit('tambah', localStorage.name)
           this.question = alphabet[Math.random() * 26 | 0]
           this.angka = Math.random() * 10 | 0
@@ -155,6 +157,7 @@ export default {
       window.addEventListener('keydown', (e) => {
         const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
         if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
+          correct.play()
           this.$socket.emit('tambah', localStorage.name)
           this.question = alphabet[Math.random() * 26 | 0]
           this.angka = Math.random() * 10 | 0
@@ -172,6 +175,7 @@ export default {
       window.addEventListener('keydown', (e) => {
         const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
         if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
+          correct.play()
           this.$socket.emit('tambah', localStorage.name)
           this.question = alphabet[Math.random() * 26 | 0]
           this.angka = Math.random() * 10 | 0
