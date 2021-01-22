@@ -4,6 +4,7 @@ const io = require('socket.io')(server);
 const PORT = 3000
 
 let players = []
+const started = false
 
 function sleep(milliseconds) {
   const date = Date.now();
@@ -22,13 +23,30 @@ io.on('connection', (socket) => {
   })
 
   socket.on('join', (payload) => {
-    players.push(payload)
-    io.emit('getPlayers', players)
+    let isTaken = false
+    players.forEach(e => {
+      if(e.name === payload.name) isTaken = true
+    })
+    if(!isTaken){
+      players.push(payload)
+      io.emit('getPlayers', players)
+      socket.emit('notTaken')
+    } else {
+      socket.emit('hasTaken')
+    }
     // if(players.length == 2) { // mulai game kalau player sudah 2 orang
       // io.emit('getReady')
     //   sleep(5000) // kasi delay sebelum mulai game
     //   io.emit('start')
     // }
+  })
+
+  socket.on('cekPlayer', (payload) => {
+    let isPlayer = false
+    players.forEach(e => {
+      if(e.name === payload) isPlayer = true
+    })
+    if (!isPlayer) socket.emit('notPlayer')
   })
 
   socket.on('triggerStart', payload => {
