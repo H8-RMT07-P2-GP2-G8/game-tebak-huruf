@@ -20,7 +20,6 @@
                     <h1>
                         {{question}} + {{angka}}
                     </h1>
-                    <audio src="../assets/sound.mp3"></audio>
                     </div>
                     <div v-if="!hasStarted">
                       <b-button variant="primary" disabled v-if="players.length<2">Please wait</b-button>
@@ -47,6 +46,7 @@
 import { mapState } from 'vuex'
 import playerCard from '../components/playerCard.vue'
 import Swal from 'sweetalert2'
+const audio = new Audio('https://ia601403.us.archive.org/5/items/the-mole/The%20Mole.mp3')
 
 export default {
   components: { playerCard },
@@ -78,12 +78,6 @@ export default {
     },
     triggerStart () {
       this.$socket.emit('triggerStart')
-      this.playSound()
-    },
-    playSound () {
-      console.log('<<<sound')
-      var audio = new Audio('https://ia601403.us.archive.org/5/items/the-mole/The%20Mole.mp3')
-      audio.play()
     }
   },
   sockets: {
@@ -93,6 +87,7 @@ export default {
     },
     getReady () {
       localStorage.setItem('hasStarted', 'true')
+      audio.play()
       console.log('Get ready')
       let timerInterval
       Swal.fire({
@@ -145,6 +140,7 @@ export default {
       })
       this.$store.commit('updateStarted', false)
       localStorage.clear()
+      audio.pause()
       this.$router.push('/')
     }
   },
