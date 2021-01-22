@@ -16,9 +16,11 @@
         <b-row>
             <b-col md="12">
                 <b-card title="Huruf apakah ini?" class="text-center border-light shadow">
-                    <h1 v-if="hasStarted">
+                    <div v-if="hasStarted">
+                    <h1>
                         {{question}} + {{angka}}
                     </h1>
+                    </div>
                     <div v-if="!hasStarted">
                       <b-button variant="primary" disabled v-if="players.length<2">Please wait</b-button>
                       <b-button variant="primary" v-if="players.length>=2 && !hasStarted" @click.prevent="triggerStart">Start</b-button>
