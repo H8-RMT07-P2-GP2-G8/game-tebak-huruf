@@ -1,7 +1,7 @@
 <template>
   <div>
     <div>
-        <b-modal ref="my-modal" hide-footer title="How to Play">
+        <b-modal ref="my-modal" hide-footer title="How to Play" v-if="!hasStarted">
             <div class="d-block">
                 <p class="my-4">1. Game baru bisa dimulai ketika jumlah player 2 atau lebih</p>
                 <p class="my-4">2. Akan muncul sebuah huruf & angka, contoh:</p>
@@ -23,7 +23,7 @@
                     </div>
                     <div v-if="!hasStarted">
                       <b-button variant="primary" disabled v-if="players.length<2">Please wait</b-button>
-                      <b-button variant="primary" v-if="players.length>=2" @click.prevent="triggerStart">Start</b-button>
+                      <b-button variant="primary" v-if="players.length>=2 && !hasStarted" @click.prevent="triggerStart">Start</b-button>
                     </div>
                 </b-card>
             </b-col>
@@ -58,7 +58,8 @@ export default {
   data () {
     return {
       question: '',
-      angka: ''
+      angka: '',
+      isGameStarted: true
     }
   },
   methods: {
@@ -69,7 +70,7 @@ export default {
       this.$socket.emit('tambah', this.$route.params.id)
     },
     showModal () {
-      this.$refs['my-modal'].show()
+      if (!this.hasStarted) this.$refs['my-modal'].show()
     },
     hideModal () {
       this.$refs['my-modal'].hide()
@@ -135,15 +136,47 @@ export default {
         text: 'The winner is ' + payload.winner
       })
       this.$store.commit('updateStarted', false)
+      localStorage.clear()
       this.$router.push('/')
     }
   },
   created () {
     this.$socket.emit('cekPlayer', localStorage.name)
+    this.$socket.emit('cekGameStatus')
+    console.log('bankai')
   },
   mounted () {
     this.$socket.emit('getPlayers')
     this.showModal()
+    if (this.hasStarted) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      this.question = alphabet[Math.random() * 26 | 0]
+      this.angka = Math.random() * 10 | 0
+      window.addEventListener('keydown', (e) => {
+        const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
+        if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
+          this.$socket.emit('tambah', localStorage.name)
+          this.question = alphabet[Math.random() * 26 | 0]
+          this.angka = Math.random() * 10 | 0
+        }
+      })
+    }
+  },
+  updated () {
+    // console.log(this.hasStarted, '<<<<')
+    if (this.hasStarted) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      this.question = alphabet[Math.random() * 26 | 0]
+      this.angka = Math.random() * 10 | 0
+      window.addEventListener('keydown', (e) => {
+        const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
+        if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
+          this.$socket.emit('tambah', localStorage.name)
+          this.question = alphabet[Math.random() * 26 | 0]
+          this.angka = Math.random() * 10 | 0
+        }
+      })
+    }
   }
 }
 </script>
