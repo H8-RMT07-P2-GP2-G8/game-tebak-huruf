@@ -144,10 +144,8 @@ export default {
   created () {
     this.$socket.emit('cekPlayer', localStorage.name)
     this.$socket.emit('cekGameStatus')
-    console.log('bankai')
     console.log(localStorage.hasStarted, '<< ini has Started')
     if (localStorage.hasStarted) {
-    // if (this.hasStarted) {
       const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
       this.question = alphabet[Math.random() * 26 | 0]
       this.angka = Math.random() * 10 | 0

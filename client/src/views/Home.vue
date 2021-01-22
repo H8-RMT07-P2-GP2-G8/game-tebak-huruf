@@ -19,6 +19,7 @@
 <script>
 // @ is an alias to /src
 import Swal from 'sweetalert2'
+import { mapState } from 'vuex'
 export default {
   name: 'Home',
   data () {
@@ -26,10 +27,17 @@ export default {
       name: ''
     }
   },
+  computed: {
+    ...mapState([
+      'hasStarted'
+    ])
+  },
   methods: {
     join () {
       this.$socket.emit('join', { name: this.name, score: 0 }) //
       localStorage.name = this.name
+      this.$socket.emit('cekGameStatus')
+      localStorage.hasStarted = this.hasStarted
     }
   },
   sockets: {
