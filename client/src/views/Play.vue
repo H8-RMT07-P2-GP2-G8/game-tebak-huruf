@@ -85,6 +85,7 @@ export default {
       this.$router.push('/')
     },
     getReady () {
+      localStorage.setItem('hasStarted', 'true')
       console.log('Get ready')
       let timerInterval
       Swal.fire({
@@ -144,6 +145,21 @@ export default {
     this.$socket.emit('cekPlayer', localStorage.name)
     this.$socket.emit('cekGameStatus')
     console.log('bankai')
+    console.log(localStorage.hasStarted, '<< ini has Started')
+    if (localStorage.hasStarted) {
+    // if (this.hasStarted) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+      this.question = alphabet[Math.random() * 26 | 0]
+      this.angka = Math.random() * 10 | 0
+      window.addEventListener('keydown', (e) => {
+        const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
+        if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
+          this.$socket.emit('tambah', localStorage.name)
+          this.question = alphabet[Math.random() * 26 | 0]
+          this.angka = Math.random() * 10 | 0
+        }
+      })
+    }
   },
   mounted () {
     this.$socket.emit('getPlayers')
@@ -164,19 +180,19 @@ export default {
   },
   updated () {
     // console.log(this.hasStarted, '<<<<')
-    if (this.hasStarted) {
-      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-      this.question = alphabet[Math.random() * 26 | 0]
-      this.angka = Math.random() * 10 | 0
-      window.addEventListener('keydown', (e) => {
-        const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
-        if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
-          this.$socket.emit('tambah', localStorage.name)
-          this.question = alphabet[Math.random() * 26 | 0]
-          this.angka = Math.random() * 10 | 0
-        }
-      })
-    }
+    // if (this.hasStarted) {
+    //   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    //   this.question = alphabet[Math.random() * 26 | 0]
+    //   this.angka = Math.random() * 10 | 0
+    //   window.addEventListener('keydown', (e) => {
+    //     const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
+    //     if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
+    //       this.$socket.emit('tambah', localStorage.name)
+    //       this.question = alphabet[Math.random() * 26 | 0]
+    //       this.angka = Math.random() * 10 | 0
+    //     }
+    //   })
+    // }
   }
 }
 </script>
