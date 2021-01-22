@@ -12,7 +12,7 @@ Vue.config.productionTip = false
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: 'https://game-tebak-huruf-server.herokuapp.com',
+  connection: 'http://localhost:3000',
   vuex: {
     store,
     actionPrefix: 'SOCKET_',
