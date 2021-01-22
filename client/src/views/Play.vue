@@ -20,6 +20,7 @@
                     <h1>
                         {{question}} + {{angka}}
                     </h1>
+                    <audio src="../assets/sound.mp3"></audio>
                     </div>
                     <div v-if="!hasStarted">
                       <b-button variant="primary" disabled v-if="players.length<2">Please wait</b-button>
@@ -77,6 +78,12 @@ export default {
     },
     triggerStart () {
       this.$socket.emit('triggerStart')
+      this.playSound()
+    },
+    playSound () {
+      console.log('<<<sound')
+      var audio = new Audio('https://ia601403.us.archive.org/5/items/the-mole/The%20Mole.mp3')
+      audio.play()
     }
   },
   sockets: {
