@@ -18,6 +18,7 @@
 
 <script>
 // @ is an alias to /src
+import Swal from 'sweetalert2'
 export default {
   name: 'Home',
   data () {
@@ -28,7 +29,19 @@ export default {
   methods: {
     join () {
       this.$socket.emit('join', { name: this.name, score: 0 }) //
-      this.$router.push('/play/' + this.name)
+      localStorage.name = this.name
+    }
+  },
+  sockets: {
+    hasTaken () {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Name already taken'
+      })
+      this.name = ''
+    },
+    notTaken () {
+      this.$router.push('/play')
     }
   },
   created () {

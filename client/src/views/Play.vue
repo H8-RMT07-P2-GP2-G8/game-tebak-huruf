@@ -74,6 +74,10 @@ export default {
     }
   },
   sockets: {
+    notPlayer () {
+      localStorage.clear()
+      this.$router.push('/')
+    },
     getReady () {
       console.log('Get ready')
       let timerInterval
@@ -112,7 +116,7 @@ export default {
       window.addEventListener('keydown', (e) => {
         const newIndex = alphabet.indexOf(this.question) + this.angka > 25 ? alphabet.indexOf(this.question) + this.angka - 26 : alphabet.indexOf(this.question) + this.angka
         if (e.key === alphabet[newIndex].toLowerCase() || e.key === alphabet[newIndex].toUpperCase()) {
-          this.$socket.emit('tambah', this.$route.params.id)
+          this.$socket.emit('tambah', localStorage.name)
           this.question = alphabet[Math.random() * 26 | 0]
           this.angka = Math.random() * 10 | 0
         }
@@ -130,8 +134,10 @@ export default {
     }
   },
   created () {
+    this.$socket.emit('cekPlayer', localStorage.name)
   },
   mounted () {
+    this.$socket.emit('getPlayers')
     this.showModal()
   }
 }
