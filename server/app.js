@@ -4,7 +4,7 @@ const io = require('socket.io')(server);
 const PORT = 3000
 
 let players = []
-const started = false
+let started = false
 
 function sleep(milliseconds) {
   const date = Date.now();
@@ -20,6 +20,11 @@ io.on('connection', (socket) => {
 
   socket.on('getPlayers', payload => {
     io.emit('getPlayers', players)
+  })
+
+  socket.on('cekGameStatus', () => {
+    if (started) socket.emit('hasStarted', true)
+    else socket.emit('hasStarted', false)
   })
 
   socket.on('join', (payload) => {
@@ -53,6 +58,7 @@ io.on('connection', (socket) => {
     sleep(1) // kasi delay sebelum mulai game
     io.emit('getReady')
     sleep(5000) // kasi delay sebelum mulai game
+    started = true
     io.emit('start')
   })
 
@@ -61,6 +67,7 @@ io.on('connection', (socket) => {
       if(e.name === name) e.score++
       if(e.score === 10){
         io.emit('end', {winner: e.name}) // kirim pemenang kalau score sudah 10
+        started = false
         players = [] // reset players kalau game selesai
       } 
     })

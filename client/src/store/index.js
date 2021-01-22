@@ -14,6 +14,9 @@ export default new Vuex.Store({
     },
     updateStarted (state, payload) {
       state.hasStarted = payload
+    },
+    SOCKET_hasStarted (state, payload) {
+      state.hasStarted = payload
     }
   },
   actions: {
